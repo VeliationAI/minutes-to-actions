@@ -24,15 +24,13 @@ dependencies = [
 
 [project.scripts]
 minutes = "minutes.cli:app"
-focuslog = "focuslog.cli:app"
 
 [project.urls]
 Homepage = "https://github.com/VeliationAI/minutes-to-actions"
 Repository = "https://github.com/VeliationAI/minutes-to-actions"
 
 [tool.setuptools.packages.find]
-include = ["minutes*", "focuslog*"]
+include = ["minutes*"]
 
 [tool.setuptools.package-data]
 minutes = ["static/*", "templates/*", "sample_transcript.txt"]
-focuslog = ["static/*", "templates/*"]

@@ -1,15 +1,15 @@
 ---
 name: Feature request
-about: Suggest an idea for Focus Log
+about: Suggest an idea for Minutes to Actions
 title: "[feature] "
 labels: enhancement
 ---
 
 **Problem**
-What attention / focus problem does this solve?
+What meeting follow-through problem does this solve?
 
 **Proposal**
-How should it work in the protect → log → review loop?
+How should it fit the paste → extract → take it forward loop?
 
 **Alternatives**
 Anything else you’ve considered?

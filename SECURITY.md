@@ -23,4 +23,4 @@ We’ll acknowledge receipt as soon as we can and coordinate a fix + disclosure.
 
 ## Scope notes
 
-Focus Log is local-first. Hosted demos share an ephemeral SQLite database — treat public instances as **non-private** sandboxes, not personal vaults.
+Minutes to Actions processes transcripts you paste. Hosted demos may sleep on the free tier — treat public instances as shared sandboxes. Prefer self-hosting with your own API key for private meeting content.

@@ -19,7 +19,7 @@ A clear description of what went wrong.
 **Environment**
 - OS:
 - Python version:
-- Focus Log version (`focuslog version`):
+- Minutes version (`minutes version`):
 - Surface: CLI / Web / Live demo
 
 **Screenshots / logs**

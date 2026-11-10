@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Minutes to Actions</title>
-  <meta name="description" content="Paste a meeting transcript. Get decisions, action items, and owners in seconds." />
+  <meta name="description" content="Paste a meeting transcript. Get decisions, action items, and owners — then take them forward." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -23,7 +23,7 @@
   <main>
     <section class="stage" id="compose">
       <h1 class="brand-hero">Minutes to Actions</h1>
-      <p class="hero-line">Paste the meeting. Get owners, decisions, and next steps.</p>
+      <p class="hero-line">Paste the meeting. Walk out with owners, decisions, and next steps you can actually do.</p>
 
       <form class="compose" id="extract-form">
         <div class="paper-wrap">
@@ -62,7 +62,7 @@
     <section class="results hidden" id="results" aria-live="polite">
       <div class="results-head">
         <div>
-          <h2>Your actions</h2>
+          <h2>What came out of the meeting</h2>
           <p id="result-summary">—</p>
         </div>
         <button type="button" class="btn ghost compact" id="btn-new">New transcript</button>
@@ -84,6 +84,32 @@
         <ul id="actions-list"></ul>
       </article>
 
+      <aside class="take-forward" aria-label="Take these actions forward">
+        <div class="take-forward-head">
+          <h3>Take it forward</h3>
+          <p>Pick one thing to do next. We’ll put the right text on your clipboard.</p>
+        </div>
+        <div class="outcome-grid" role="group" aria-label="Next steps">
+          <button type="button" class="outcome-btn primary-outcome" data-share="reminders">
+            <span class="outcome-title">Remind everyone</span>
+            <span class="outcome-hint">Paste into Reminders or Tasks</span>
+          </button>
+          <button type="button" class="outcome-btn" data-share="followup">
+            <span class="outcome-title">Schedule follow-up</span>
+            <span class="outcome-hint">Paste into a calendar invite</span>
+          </button>
+          <button type="button" class="outcome-btn" data-share="notes">
+            <span class="outcome-title">Save meeting notes</span>
+            <span class="outcome-hint">Paste into Notes or Notion</span>
+          </button>
+          <button type="button" class="outcome-btn" data-share="email">
+            <span class="outcome-title">Email the team</span>
+            <span class="outcome-hint">Paste into Gmail or Outlook</span>
+          </button>
+        </div>
+        <p class="share-status" id="share-status" role="status"></p>
+      </aside>
+
       <div class="split">
         <article class="block decisions">
           <div class="block-head">
@@ -102,36 +128,6 @@
       </div>
 
       <p class="attendees" id="attendees-list"></p>
-
-      <aside class="take-forward" aria-label="Take these actions forward">
-        <div class="take-forward-head">
-          <h3>Take it forward</h3>
-          <p>Copy what you need — paste into the tools you already use.</p>
-        </div>
-        <div class="share-grid" role="group" aria-label="Share options">
-          <button type="button" class="share-btn primary-share" data-share="checklist">
-            <span class="share-title">Copy checklist</span>
-            <span class="share-hint">Slack, Notion, email</span>
-          </button>
-          <button type="button" class="share-btn" data-share="notes">
-            <span class="share-title">Meeting notes</span>
-            <span class="share-hint">Plain summary</span>
-          </button>
-          <button type="button" class="share-btn" data-share="reminders">
-            <span class="share-title">Reminders</span>
-            <span class="share-hint">Owner · task · due</span>
-          </button>
-          <button type="button" class="share-btn" data-share="followup">
-            <span class="share-title">Follow-up meeting</span>
-            <span class="share-hint">Short agenda</span>
-          </button>
-          <button type="button" class="share-btn" data-share="email">
-            <span class="share-title">Email draft</span>
-            <span class="share-hint">Ready to send</span>
-          </button>
-        </div>
-        <p class="share-status" id="share-status" role="status"></p>
-      </aside>
     </section>
   </main>
 

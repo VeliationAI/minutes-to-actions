@@ -2,7 +2,7 @@
 
 ## Our pledge
 
-We pledge to make participation in Focus Log a harassment-free experience for everyone, regardless of age, body size, disability, ethnicity, gender identity and expression, level of experience, nationality, personal appearance, race, religion, or sexual identity and orientation.
+We pledge to make participation in Minutes to Actions a harassment-free experience for everyone, regardless of age, body size, disability, ethnicity, gender identity and expression, level of experience, nationality, personal appearance, race, religion, or sexual identity and orientation.
 
 ## Our standards
 
@@ -22,7 +22,7 @@ Examples of unacceptable behavior:
 
 ## Enforcement
 
-Report issues to the maintainers via GitHub issues on [VeliationAI/focuslog](https://github.com/VeliationAI/focuslog) or by contacting [Veliation AI](https://github.com/VeliationAI).
+Report issues to the maintainers via GitHub issues on [VeliationAI/minutes-to-actions](https://github.com/VeliationAI/minutes-to-actions) or by contacting [Veliation AI](https://github.com/VeliationAI).
 
 Maintainers will review and take appropriate action, including warning or banning contributors who violate this code.
 

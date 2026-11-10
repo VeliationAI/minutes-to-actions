@@ -11,7 +11,8 @@
   const btnNew = document.getElementById("btn-new");
   const charHint = document.getElementById("char-hint");
   const countsEl = document.getElementById("counts");
-  const shareGrid = document.querySelector(".share-grid");
+  const outcomeGrid = document.querySelector(".outcome-grid");
+  const actionsList = document.getElementById("actions-list");
 
   let lastPayload = null;
   let extracting = false;
@@ -48,18 +49,47 @@
       : "Paste or try the sample";
   }
 
+  function actionLine(a) {
+    const owner = a.owner || "Unassigned";
+    const due = a.due ? ` · due ${a.due}` : "";
+    return `${owner}: ${a.task}${due}`;
+  }
+
+  function formatSingleReminder(a) {
+    const due = a.due ? ` (due ${a.due})` : "";
+    return `${a.owner || "Unassigned"} — ${a.task}${due}`;
+  }
+
+  function formatSingleNote(a) {
+    const due = a.due ? `\nDue: ${a.due}` : "";
+    const priority = a.priority ? `\nPriority: ${a.priority}` : "";
+    return `Action · ${a.owner || "Unassigned"}\n${a.task}${due}${priority}`;
+  }
+
+  function formatSingleFollowUp(a) {
+    const due = a.due ? ` — due ${a.due}` : "";
+    return [
+      "Follow-up check-in",
+      "",
+      `Owner: ${a.owner || "Unassigned"}`,
+      `Topic: ${a.task}${due}`,
+      "",
+      "Goal: confirm status and next due date.",
+    ].join("\n");
+  }
+
   function formatNotes(result) {
-    const lines = [];
+    const lines = ["Meeting notes", ""];
     if (result.summary) {
       lines.push(result.summary, "");
     }
     if (result.attendees?.length) {
-      lines.push(`People: ${result.attendees.join(", ")}`, "");
+      lines.push(`Attendees: ${result.attendees.join(", ")}`, "");
     }
     if (result.decisions?.length) {
       lines.push("Decisions");
       result.decisions.forEach((d, i) => {
-        const extra = d.context ? ` (${d.context})` : "";
+        const extra = d.context ? ` — ${d.context}` : "";
         lines.push(`${i + 1}. ${d.text}${extra}`);
       });
       lines.push("");
@@ -67,8 +97,7 @@
     if (result.action_items?.length) {
       lines.push("Action items");
       result.action_items.forEach((a) => {
-        const due = a.due ? ` — due ${a.due}` : "";
-        lines.push(`• ${a.owner || "Unassigned"}: ${a.task}${due}`);
+        lines.push(`• ${actionLine(a)}`);
       });
       lines.push("");
     }
@@ -82,46 +111,53 @@
   function formatReminders(result) {
     const actions = result.action_items || [];
     if (!actions.length) {
-      return "No action items to remind — extract a longer transcript first.";
+      return "No action items yet — extract a longer transcript first.";
     }
-    return actions
-      .map((a) => {
-        const owner = a.owner || "Unassigned";
-        const due = a.due ? ` · due ${a.due}` : "";
-        return `${owner}: ${a.task}${due}`;
-      })
-      .join("\n");
+    return actions.map(formatSingleReminder).join("\n");
   }
 
   function formatFollowUp(result) {
-    const lines = ["Follow-up meeting agenda", ""];
+    const title = result.summary
+      ? `Follow-up: ${result.summary.slice(0, 64)}`
+      : "Follow-up meeting";
+    const lines = [
+      title,
+      "",
+      "Suggested invite",
+      "When: pick a 30-minute slot this week",
+      "Where: same call link as last time",
+      "",
+    ];
+
     if (result.summary) {
       lines.push(`Context: ${result.summary}`, "");
     }
 
-    const openActions = (result.action_items || []).filter(Boolean);
+    const openActions = result.action_items || [];
     if (openActions.length) {
-      lines.push("Check-ins");
-      openActions.forEach((a) => {
+      lines.push("Agenda — check-ins");
+      openActions.forEach((a, i) => {
         const due = a.due ? ` (due ${a.due})` : "";
-        lines.push(`- ${a.owner || "Unassigned"}: ${a.task}${due}`);
+        lines.push(`${i + 1}. ${a.owner || "Unassigned"}: ${a.task}${due}`);
       });
       lines.push("");
     }
 
     const questions = result.open_questions || [];
     if (questions.length) {
-      lines.push("Decide next");
-      questions.forEach((q) => lines.push(`- ${q}`));
+      lines.push("Agenda — decide next");
+      questions.forEach((q, i) => lines.push(`${i + 1}. ${q}`));
       lines.push("");
     }
 
     if (!openActions.length && !questions.length) {
-      lines.push("- Review last decisions and confirm next owners.");
-    } else {
-      lines.push("Close with owners and due dates.");
+      lines.push("Agenda");
+      lines.push("1. Review last decisions");
+      lines.push("2. Confirm owners and due dates");
+      lines.push("");
     }
 
+    lines.push("Close by assigning owners and due dates.");
     return lines.join("\n").trim();
   }
 
@@ -137,13 +173,13 @@
     ];
 
     if (result.decisions?.length) {
-      body.push("Decisions:");
+      body.push("What we decided:");
       result.decisions.forEach((d) => body.push(`- ${d.text}`));
       body.push("");
     }
 
     if (result.action_items?.length) {
-      body.push("Action items:");
+      body.push("Who owns what:");
       result.action_items.forEach((a) => {
         const due = a.due ? ` (due ${a.due})` : "";
         body.push(`- ${a.owner || "Unassigned"}: ${a.task}${due}`);
@@ -152,7 +188,7 @@
     }
 
     if (result.open_questions?.length) {
-      body.push("Open questions:");
+      body.push("Still open:");
       result.open_questions.forEach((q) => body.push(`- ${q}`));
       body.push("");
     }
@@ -162,27 +198,56 @@
   }
 
   const shareOptions = {
-    checklist: {
-      build: (payload) => payload.markdown,
-      ok: "Checklist copied — paste into Slack, Notion, or email.",
-    },
-    notes: {
-      build: (payload) => formatNotes(payload.result),
-      ok: "Meeting notes copied — paste into your notes app.",
-    },
     reminders: {
       build: (payload) => formatReminders(payload.result),
-      ok: "Reminders copied — paste into Apple Reminders / Google Tasks.",
+      ok: "Reminders ready — paste into Apple Reminders, Google Tasks, or Todoist.",
     },
     followup: {
       build: (payload) => formatFollowUp(payload.result),
-      ok: "Follow-up agenda copied — paste into your calendar invite.",
+      ok: "Follow-up invite draft ready — paste into Google Calendar or Outlook.",
+    },
+    notes: {
+      build: (payload) => formatNotes(payload.result),
+      ok: "Meeting notes ready — paste into Apple Notes, Notion, or OneNote.",
     },
     email: {
       build: (payload) => formatEmail(payload.result),
-      ok: "Email draft copied — paste into your mail client.",
+      ok: "Email draft ready — paste into Gmail or Outlook.",
     },
   };
+
+  const itemActions = {
+    remind: {
+      build: (a) => formatSingleReminder(a),
+      ok: "Reminder copied — paste into Reminders or Tasks.",
+    },
+    followup: {
+      build: (a) => formatSingleFollowUp(a),
+      ok: "Follow-up note copied — paste into a calendar invite or chat.",
+    },
+    notes: {
+      build: (a) => formatSingleNote(a),
+      ok: "Action note copied — paste into Notes or Notion.",
+    },
+  };
+
+  function renderActionItem(a, index) {
+    const due = a.due ? ` · due ${escapeHtml(a.due)}` : "";
+    return `<li class="action-item" data-action-index="${index}">
+      <span class="owner">${escapeHtml(a.owner || "Unassigned")}</span>
+      <div class="action-body">
+        <p>${escapeHtml(a.task)}</p>
+        <p class="action-meta">
+          <span class="priority-${escapeHtml(a.priority || "medium")}">${escapeHtml(a.priority || "medium")}</span>${due}
+        </p>
+        <div class="item-actions" role="group" aria-label="Do something with this action">
+          <button type="button" class="item-act" data-item-act="remind">Remind</button>
+          <button type="button" class="item-act" data-item-act="followup">Follow up</button>
+          <button type="button" class="item-act" data-item-act="notes">Add to notes</button>
+        </div>
+      </div>
+    </li>`;
+  }
 
   function render(result, markdown) {
     lastPayload = { result, markdown };
@@ -193,7 +258,7 @@
     const questions = result.open_questions || [];
 
     document.getElementById("result-summary").textContent =
-      result.summary || "Ready to share with your team.";
+      result.summary || "Here’s what to take forward with your team.";
     document.getElementById("result-meta").textContent =
       `Source · ${result.source}` +
       (result.attendees?.length ? ` · ${result.attendees.length} people` : "");
@@ -206,23 +271,9 @@
     document.getElementById("decisions-count").textContent = String(decisions.length);
     document.getElementById("questions-count").textContent = String(questions.length);
 
-    const actionsList = document.getElementById("actions-list");
     actionsList.innerHTML = actions.length
-      ? actions
-          .map((a) => {
-            const due = a.due ? ` · due ${escapeHtml(a.due)}` : "";
-            return `<li class="action-item">
-              <span class="owner">${escapeHtml(a.owner || "Unassigned")}</span>
-              <div class="action-body">
-                <p>${escapeHtml(a.task)}</p>
-                <p class="action-meta">
-                  <span class="priority-${escapeHtml(a.priority || "medium")}">${escapeHtml(a.priority || "medium")}</span>${due}
-                </p>
-              </div>
-            </li>`;
-          })
-          .join("")
-      : `<li class="empty">No action items found — try a longer transcript.</li>`;
+      ? actions.map(renderActionItem).join("")
+      : `<li class="empty">No action items found — try a longer transcript, or save meeting notes below.</li>`;
 
     const decisionsList = document.getElementById("decisions-list");
     decisionsList.innerHTML = decisions.length
@@ -239,32 +290,53 @@
     const questionsList = document.getElementById("questions-list");
     questionsList.innerHTML = questions.length
       ? questions.map((q) => `<li>${escapeHtml(q)}</li>`).join("")
-      : `<li class="empty">Nothing left open.</li>`;
+      : `<li class="empty">Nothing left open — nice.</li>`;
 
     const attendees = document.getElementById("attendees-list");
     attendees.textContent = result.attendees?.length
       ? `Attendees · ${result.attendees.join(" · ")}`
       : "";
 
+    const remindBtn = outcomeGrid?.querySelector('[data-share="reminders"]');
+    if (remindBtn) {
+      remindBtn.classList.toggle("primary-outcome", actions.length > 0);
+      remindBtn.disabled = actions.length === 0;
+      remindBtn.title = actions.length
+        ? "Copy every action as reminder lines"
+        : "No action items to remind yet";
+    }
+
     resultsEl.classList.remove("hidden");
     resultsEl.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  async function copyText(text, okMessage) {
+    try {
+      await navigator.clipboard.writeText(text);
+      setShareStatus(okMessage, "ok");
+      setStatus(okMessage, "ok");
+      return true;
+    } catch {
+      const fail = "Could not copy — select the text and copy manually.";
+      setShareStatus(fail, "error");
+      setStatus(fail, "error");
+      return false;
+    }
   }
 
   async function copyShare(kind) {
     if (!lastPayload) return;
     const option = shareOptions[kind];
     if (!option) return;
+    const text = option.build(lastPayload);
+    await copyText(text, option.ok);
+  }
 
-    try {
-      const text = option.build(lastPayload);
-      await navigator.clipboard.writeText(text);
-      setShareStatus(option.ok, "ok");
-      setStatus(option.ok, "ok");
-    } catch {
-      const fail = "Could not copy — select the text and copy manually.";
-      setShareStatus(fail, "error");
-      setStatus(fail, "error");
-    }
+  async function copyItemAction(kind, index) {
+    const action = lastPayload?.result?.action_items?.[index];
+    const option = itemActions[kind];
+    if (!action || !option) return;
+    await copyText(option.build(action), option.ok);
   }
 
   async function runExtract() {
@@ -305,8 +377,8 @@
       render(data.result, data.markdown);
       setStatus(
         data.result.source === "llm"
-          ? "Done. Pick how you want to take these forward."
-          : "Done offline. Pick how you want to take these forward.",
+          ? "Done. Act on each item, or take the whole meeting forward below."
+          : "Done offline. Act on each item, or take the whole meeting forward below.",
         "ok"
       );
     } catch (err) {
@@ -355,10 +427,20 @@
     }
   });
 
-  shareGrid?.addEventListener("click", (event) => {
+  outcomeGrid?.addEventListener("click", (event) => {
     const btn = event.target.closest("[data-share]");
-    if (!btn) return;
+    if (!btn || btn.disabled) return;
     copyShare(btn.dataset.share);
+  });
+
+  actionsList?.addEventListener("click", (event) => {
+    const btn = event.target.closest("[data-item-act]");
+    if (!btn) return;
+    const row = btn.closest("[data-action-index]");
+    if (!row) return;
+    const index = Number(row.dataset.actionIndex);
+    if (Number.isNaN(index)) return;
+    copyItemAction(btn.dataset.itemAct, index);
   });
 
   updatePaperChrome();

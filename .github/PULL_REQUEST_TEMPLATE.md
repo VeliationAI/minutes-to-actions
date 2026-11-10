@@ -8,9 +8,9 @@
 - [ ] Refactor / chore
 
 ## Test plan
-- [ ] `focuslog version`
-- [ ] CLI smoke: start → distract → done → report
-- [ ] `focuslog serve --seed` loads the dashboard
+- [ ] `minutes version`
+- [ ] `minutes extract -f minutes/sample_transcript.txt --heuristic -F json`
+- [ ] `minutes serve` loads Try sample → Extract → Take it forward
 
 ## Notes
 Linked issue: #
