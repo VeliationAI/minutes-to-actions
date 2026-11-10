@@ -3,35 +3,14 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "focuslog"
-version = "1.1.0"
-description = "Pomodoro timer + distraction log with weekly analytics."
+name = "minutes-to-actions"
+version = "1.0.0"
+description = "Paste a meeting transcript → decisions, action items, and owners."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [{ name = "Veliation AI" }]
-keywords = [
-  "pomodoro",
-  "focus",
-  "productivity",
-  "distraction",
-  "analytics",
-  "cli",
-  "timer",
-  "open-source",
-]
-classifiers = [
-  "Development Status :: 4 - Beta",
-  "Environment :: Console",
-  "Environment :: Web Environment",
-  "Intended Audience :: End Users/Desktop",
-  "License :: OSI Approved :: MIT License",
-  "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: 3.12",
-  "Topic :: Office/Business :: Scheduling",
-]
+keywords = ["meetings", "action-items", "productivity", "llm", "minutes"]
 dependencies = [
   "typer>=0.12.0",
   "rich>=13.7.0",
@@ -39,23 +18,21 @@ dependencies = [
   "uvicorn[standard]>=0.30.0",
   "jinja2>=3.1.0",
   "python-multipart>=0.0.9",
+  "httpx>=0.27.0",
+  "pydantic>=2.7.0",
 ]
 
-[project.optional-dependencies]
-dev = ["httpx>=0.27.0", "ruff>=0.6.0"]
-
 [project.scripts]
+minutes = "minutes.cli:app"
 focuslog = "focuslog.cli:app"
 
 [project.urls]
-Homepage = "https://github.com/VeliationAI/focuslog"
-Repository = "https://github.com/VeliationAI/focuslog"
-Issues = "https://github.com/VeliationAI/focuslog/issues"
-Changelog = "https://github.com/VeliationAI/focuslog/blob/main/CHANGELOG.md"
-"Live Demo" = "https://focuslog-wd2q.onrender.com"
+Homepage = "https://github.com/VeliationAI/minutes-to-actions"
+Repository = "https://github.com/VeliationAI/minutes-to-actions"
 
 [tool.setuptools.packages.find]
-include = ["focuslog*"]
+include = ["minutes*", "focuslog*"]
 
 [tool.setuptools.package-data]
+minutes = ["static/*", "templates/*", "sample_transcript.txt"]
 focuslog = ["static/*", "templates/*"]

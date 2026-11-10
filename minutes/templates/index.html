@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Minutes to Actions</title>
+  <meta name="description" content="Paste a meeting transcript. Get decisions, action items, and owners in seconds." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <div class="glow" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="brand" href="/">Minutes to Actions</a>
+    <nav class="top-links">
+      <a href="https://github.com/VeliationAI/minutes-to-actions" target="_blank" rel="noreferrer">GitHub</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="stage" id="compose">
+      <h1 class="brand-hero">Minutes to Actions</h1>
+      <p class="hero-line">Paste the meeting. Get owners, decisions, and next steps.</p>
+
+      <form class="compose" id="extract-form">
+        <div class="paper-wrap">
+          <div class="paper-tools">
+            <span class="hint" id="char-hint">Paste or try the sample</span>
+            <div class="paper-actions">
+              <button type="button" class="linkish" id="btn-clear" hidden>Clear</button>
+              <button type="button" class="linkish" id="btn-sample">Try sample</button>
+            </div>
+          </div>
+          <label class="sr-only" for="transcript">Meeting transcript</label>
+          <textarea
+            id="transcript"
+            name="transcript"
+            rows="12"
+            placeholder="Alex: Let's ship the beta Friday.&#10;Sam: I'll send the checklist by Wednesday.&#10;Priya: Agreed — we're going with the new name."
+            required
+            autofocus
+          ></textarea>
+        </div>
+
+        <div class="compose-bar">
+          <label class="check" title="No API key needed">
+            <input type="checkbox" id="heuristic" name="heuristic" checked />
+            <span>Works offline</span>
+          </label>
+          <button type="submit" class="btn primary" id="btn-extract">
+            <span class="btn-label">Extract actions</span>
+            <span class="btn-kbd" aria-hidden="true">⌘↵</span>
+          </button>
+        </div>
+        <p class="status" id="status" role="status"></p>
+      </form>
+    </section>
+
+    <section class="results hidden" id="results" aria-live="polite">
+      <div class="results-head">
+        <div>
+          <h2>Your actions</h2>
+          <p id="result-summary">—</p>
+        </div>
+        <button type="button" class="btn ghost compact" id="btn-new">New transcript</button>
+      </div>
+
+      <p class="meta" id="result-meta"></p>
+
+      <div class="pulse-row" id="counts" hidden>
+        <div class="pulse"><strong id="c-actions">0</strong><span>actions</span></div>
+        <div class="pulse"><strong id="c-decisions">0</strong><span>decisions</span></div>
+        <div class="pulse"><strong id="c-questions">0</strong><span>open</span></div>
+      </div>
+
+      <article class="block actions" id="actions-block">
+        <div class="block-head">
+          <h3>Action items</h3>
+          <span class="count-badge" id="actions-count">0</span>
+        </div>
+        <ul id="actions-list"></ul>
+      </article>
+
+      <div class="split">
+        <article class="block decisions">
+          <div class="block-head">
+            <h3>Decisions</h3>
+            <span class="count-badge" id="decisions-count">0</span>
+          </div>
+          <ol id="decisions-list"></ol>
+        </article>
+        <article class="block questions">
+          <div class="block-head">
+            <h3>Open questions</h3>
+            <span class="count-badge" id="questions-count">0</span>
+          </div>
+          <ul id="questions-list"></ul>
+        </article>
+      </div>
+
+      <p class="attendees" id="attendees-list"></p>
+
+      <aside class="take-forward" aria-label="Take these actions forward">
+        <div class="take-forward-head">
+          <h3>Take it forward</h3>
+          <p>Copy what you need — paste into the tools you already use.</p>
+        </div>
+        <div class="share-grid" role="group" aria-label="Share options">
+          <button type="button" class="share-btn primary-share" data-share="checklist">
+            <span class="share-title">Copy checklist</span>
+            <span class="share-hint">Slack, Notion, email</span>
+          </button>
+          <button type="button" class="share-btn" data-share="notes">
+            <span class="share-title">Meeting notes</span>
+            <span class="share-hint">Plain summary</span>
+          </button>
+          <button type="button" class="share-btn" data-share="reminders">
+            <span class="share-title">Reminders</span>
+            <span class="share-hint">Owner · task · due</span>
+          </button>
+          <button type="button" class="share-btn" data-share="followup">
+            <span class="share-title">Follow-up meeting</span>
+            <span class="share-hint">Short agenda</span>
+          </button>
+          <button type="button" class="share-btn" data-share="email">
+            <span class="share-title">Email draft</span>
+            <span class="share-hint">Ready to send</span>
+          </button>
+        </div>
+        <p class="share-status" id="share-status" role="status"></p>
+      </aside>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Open source by <a href="https://github.com/VeliationAI" target="_blank" rel="noreferrer">Veliation AI</a> · MIT</p>
+  </footer>
+
+  <script>
+    window.__SAMPLE__ = {{ sample | tojson }};
+  </script>
+  <script src="/static/app.js"></script>
+</body>
+</html>

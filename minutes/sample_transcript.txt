@@ -1,0 +1,28 @@
+Product Sync — Nov 9, 2026
+Attendees: Maya Chen, Jordan Lee, Priya Shah, Sam Ortiz
+
+Maya: Alright, let's lock the Q4 launch plan. We're slipping if we keep debating naming.
+Jordan: Agreed. For the product name, I think we should go with Lumen over Atlas. Atlas confuses people with the infra tool.
+Priya: I'm fine with Lumen. Decision: ship under Lumen.
+Maya: Perfect. So we're decided — the product ships as Lumen.
+
+Sam: On the waitlist, conversion is soft. Can we add a short explainer video?
+Priya: Yes. Sam, will you draft the script by Wednesday?
+Sam: Sam will draft the explainer script by Wednesday and send it to Priya for review.
+Priya: I'll review and comment within 24 hours.
+
+Jordan: Engineering needs a freeze date. Can we freeze scope this Friday?
+Maya: Yes — decision: feature freeze Friday EOD. Anything not in main by then slips to January.
+Jordan: Jordan will cut the release branch Friday and post the checklist in #launch.
+Maya: High priority — Jordan, also confirm staging data is anonymized before the freeze. That's a blocker.
+
+Priya: Pricing page copy still feels salesy. Who owns the rewrite?
+Maya: Priya will rewrite pricing page copy by next Monday.
+Priya: Got it. Do we still need annual discount at 20%?
+Jordan: Open question — finance hasn't signed off on the annual discount yet.
+Maya: Let's park that. Action item: Maya will ping finance about the annual discount by EOD tomorrow.
+
+Sam: Support wants a FAQ. Sam to publish FAQ draft in Notion by Thursday.
+Maya: Great. Any other blockers?
+Jordan: Only the anonymized staging data I mentioned.
+Maya: Alright — summary for me: Lumen is the name, Friday freeze, Sam on video script, Priya on pricing, Maya on finance, Jordan on release branch. Thanks everyone.

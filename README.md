@@ -35,7 +35,7 @@ Minutes to Actions turns transcripts into that residue — via CLI or a tiny web
 - **LLM extraction** — OpenAI-compatible APIs (`gpt-4o-mini` by default)
 - **Offline mode** — heuristics when no API key (demos never break)
 - **CLI + web** — same core extractor
-- **Exports** — markdown checklist or JSON
+- **Take it forward** — copy checklist, notes, reminders, follow-up agenda, or email draft
 - **Self-host ready** — `render.yaml` included
 
 ## Quick start
